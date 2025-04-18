@@ -25,8 +25,10 @@ router.get('/recipe/:id', async (request, response) => {
 router.post('/recipe/add', async (request, response) => {
     const { title, image, description, ingredients, instructions, prepTime, difficulty } = request.body
     const collection = await getRecipes()
-    const { acknowledged, insertedId } = await collection.insertOne({ title, image, description, ingredients, instructions, prepTime, difficulty })
-    response.send({ acknowledged, insertedId,  title, image, description, ingredients, instructions, prepTime, difficulty })
+    const recipes = await collection.find().toArray()
+    const id = (recipes.length + 1)
+    const { acknowledged, insertedId } = await collection.insertOne({ id, title, image, description, ingredients, instructions, prepTime, difficulty })
+    response.send({ acknowledged, insertedId,  id, title, image, description, ingredients, instructions, prepTime, difficulty })
 })
 
 module.exports = router
